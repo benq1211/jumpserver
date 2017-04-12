@@ -447,18 +447,18 @@ class Nav(object):
         Print prompt
         打印提示导航
         """
-        msg = """\n\033[1;32m###    欢迎使用Jumpserver开源跳板机系统   ### \033[0m
+        msg = """\n\033[1;32m###    welcome to use Jumpserver   ### \033[0m
 
-        1) 输入 \033[32mID\033[0m 直接登录 或 输入\033[32m部分 IP,主机名,备注\033[0m 进行搜索登录(如果唯一).
-        2) 输入 \033[32m/\033[0m + \033[32mIP, 主机名 or 备注 \033[0m搜索. 如: /ip
-        3) 输入 \033[32mP/p\033[0m 显示您有权限的主机.
-        4) 输入 \033[32mG/g\033[0m 显示您有权限的主机组.
-        5) 输入 \033[32mG/g\033[0m\033[0m + \033[32m组ID\033[0m 显示该组下主机. 如: g1
-        6) 输入 \033[32mE/e\033[0m 批量执行命令.
-        7) 输入 \033[32mU/u\033[0m 批量上传文件.
-        8) 输入 \033[32mD/d\033[0m 批量下载文件.
-        9) 输入 \033[32mH/h\033[0m 帮助.
-        0) 输入 \033[32mQ/q\033[0m 退出.
+        1) input \033[32mID\033[0m login or input\033[32m part IP,hostname,remark\033[0m to search(if only one).
+        2) input \033[32m/\033[0m + \033[32mIP, hostname or bak \033[0m remark. like: /ip
+        3) input \033[32mP/p\033[0m show the host you have permission to login.
+        4) input \033[32mG/g\033[0m show the host group you have permission to login.
+        5) input \033[32mG/g\033[0m\033[0m + \033[32m group ID\033[0m show the host on this group. like: g1
+        6) input \033[32mE/e\033[0m execute the order in batches.
+        7) input \033[32mU/u\033[0m bulk upload files.
+        8) input \033[32mD/d\033[0m bulk download files.
+        9) input \033[32mH/h\033[0m to help.
+        0) input \033[32mQ/q\033[0m to exit.
         """
         print textwrap.dedent(msg)
 
@@ -472,7 +472,7 @@ class Nav(object):
             if asset_group and asset_group in self.perm_asset_groups:
                 self.search_result = list(asset_group.asset_set.all())
             else:
-                color_print('没有该资产组或没有权限')
+                color_print('There is no asset group or no permission')
                 return
 
     def search(self, str_r=''):
@@ -593,13 +593,13 @@ class Nav(object):
                     if role_id == 'q':
                         break
                 except (IndexError, ValueError):
-                    color_print('错误输入')
+                    color_print('error input')
                 else:
                     role = role_check[int(role_id)]
             elif len(roles) == 1:  # 授权角色数为1
                 role = roles[0]
             else:
-                color_print('当前用户未被授予角色，无法执行任何操作，如有疑问请联系管理员。')
+                color_print('The current user is not granted the role, can not perform any operation, if in doubt please contact the administrator')
                 return
             assets = list(self.user_perm.get('role', {}).get(role).get('asset'))  # 获取该用户，角色授权主机
             print "授权包含该系统用户的所有主机"
