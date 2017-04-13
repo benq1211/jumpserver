@@ -455,10 +455,8 @@ class Nav(object):
         4) input \033[32mG/g\033[0m show the host group you have permission to login.
         5) input \033[32mG/g\033[0m\033[0m + \033[32m group ID\033[0m show the host on this group. like: g1
         6) input \033[32mE/e\033[0m execute the order in batches.
-        7) input \033[32mU/u\033[0m bulk upload files.
-        8) input \033[32mD/d\033[0m bulk download files.
-        9) input \033[32mH/h\033[0m to help.
-        0) input \033[32mQ/q\033[0m to exit.
+        7) input \033[32mH/h\033[0m to help.
+        8) input \033[32mQ/q\033[0m to exit.
         """
         print textwrap.dedent(msg)
 
@@ -537,11 +535,11 @@ class Nav(object):
             if len(roles) == 1:
                 role = roles[0]
             elif len(roles) > 1:
-                print "\033[32m[ID] 系统用户\033[0m"
+                print "\033[32m[ID] system user \033[0m"
                 for index, role in enumerate(roles):
                     print "[%-2s] %s" % (index, role.name)
                 print
-                print "授权系统用户超过1个，请输入ID, q退出"
+                print "Authorize system users more than one, please enter ID, q exit"
                 try:
                     role_index = raw_input("\033[1;32mID>:\033[0m ").strip()
                     if role_index == 'q':
@@ -549,17 +547,17 @@ class Nav(object):
                     else:
                         role = roles[int(role_index)]
                 except IndexError:
-                    color_print('请输入正确ID', 'red')
+                    color_print('pluze intput correct ID', 'red')
                     return
             else:
-                color_print('没有映射用户', 'red')
+                color_print('No mapping users', 'red')
                 return
 
             print('Connecting %s ...' % asset.hostname)
             ssh_tty = SshTty(login_user, asset, role)
             ssh_tty.connect()
         except (KeyError, ValueError):
-            color_print('请输入正确ID', 'red')
+            color_print('please input correct ID', 'red')
         except ServerError, e:
             color_print(e, 'red')
 
@@ -568,7 +566,7 @@ class Nav(object):
         打印用户授权的资产组
         """
         user_asset_group_all = get_group_user_perm(self.user).get('asset_group', [])
-        color_print('[%-3s] %-20s %s' % ('ID', '组名', '备注'), 'title')
+        color_print('[%-3s] %-20s %s' % ('ID', 'group name', 'remarks'), 'title')
         for asset_group in user_asset_group_all:
             print '[%-3s] %-15s %s' % (asset_group.id, asset_group.name, asset_group.comment)
         print
@@ -580,13 +578,13 @@ class Nav(object):
         while True:
             roles = self.user_perm.get('role').keys()
             if len(roles) > 1:  # 授权角色数大于1
-                color_print('[%-2s] %-15s' % ('ID', '系统用户'),  'info')
+                color_print('[%-2s] %-15s' % ('ID', 'system user'),  'info')
                 role_check = dict(zip(range(len(roles)), roles))
 
                 for i, r in role_check.items():
                     print '[%-2s] %-15s' % (i, r.name)
                 print
-                print "请输入运行命令所关联系统用户的ID, q退出"
+                print "Please enter the ID of the system user associated with the run command, q exit"
 
                 try:
                     role_id = int(raw_input("\033[1;32mRole>:\033[0m ").strip())
@@ -602,11 +600,11 @@ class Nav(object):
                 color_print('The current user is not granted the role, can not perform any operation, if in doubt please contact the administrator')
                 return
             assets = list(self.user_perm.get('role', {}).get(role).get('asset'))  # 获取该用户，角色授权主机
-            print "授权包含该系统用户的所有主机"
+            print "Authorize all hosts that contain the system user"
             for asset in assets:
                 print ' %s' % asset.hostname
             print
-            print "请输入主机名或ansible支持的pattern, 多个主机:分隔, q退出"
+            print "Please enter the host name or ansible support pattern, multiple hosts: separate, q exit"
             pattern = raw_input("\033[1;32mPattern>:\033[0m ").strip()
             if pattern == 'q':
                 break
@@ -621,12 +619,12 @@ class Nav(object):
                 print
 
                 while True:
-                    print "请输入执行的命令， 按q退出"
+                    print "please input execute command,q exit"
                     command = raw_input("\033[1;32mCmds>:\033[0m ").strip()
                     if command == 'q':
                         break
                     elif not command:
-                        color_print('命令不能为空...')
+                        color_print('command not null...')
                         continue
                     runner.run('shell', command, pattern=pattern)
                     ExecLog(host=asset_name_str, user=self.user.username, cmd=command, remote_ip=remote_ip,
@@ -759,10 +757,10 @@ def main():
     主程序
     """
     if not login_user:  # 判断用户是否存在
-        color_print('没有该用户，或许你是以root运行的 No that user.', exits=True)
+        color_print(' No that user.', exits=True)
 
     if not login_user.is_active:
-        color_print('您的用户已禁用，请联系管理员.', exits=True)
+        color_print('Your user is disabled, please contact the administrator.', exits=True)
 
     gid_pattern = re.compile(r'^g\d+$')
     nav = Nav(login_user)
