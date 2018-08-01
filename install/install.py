@@ -45,7 +45,7 @@ def color_print(msg, color='red', exits=False):
                  'title': '\033[30;42m%s\033[0m',
                  'info': '\033[32m%s\033[0m'}
     msg = color_msg.get(color, 'red') % msg
-    print msg
+    print (msg)
     if exits:
         time.sleep(2)
         sys.exit()
@@ -195,7 +195,7 @@ class PreSetup(object):
                             user=self.db_user, passwd=self.db_pass, db=self.db)
             color_print('连接数据库成功', 'green')
             return True
-        except MySQLdb.OperationalError, e:
+        except MySQLdb.OperationalError as e:
             color_print('数据库连接失败 %s' % e, 'red')
             return False
 
@@ -212,7 +212,7 @@ class PreSetup(object):
             smtp.quit()
             return True
 
-        except Exception, e:
+        except Exception as e:
             color_print(e, 'red')
             skip = raw_input('是否跳过(y/n) [n]? : ')
             if skip == 'y':

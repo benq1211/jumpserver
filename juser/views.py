@@ -121,7 +121,7 @@ def group_edit(request):
             user_group.name = group_name
             user_group.comment = comment
             user_group.save()
-        except ServerError, e:
+        except ServerError as e:
             error = e
 
         if not error:
@@ -191,7 +191,7 @@ def user_add(request):
                     for user_group_id in groups:
                         user_groups.extend(UserGroup.objects.filter(id=user_group_id))
 
-            except IndexError, e:
+            except IndexError as e:
                 error = u'添加用户 %s 失败 %s ' % (username, e)
                 try:
                     db_del_user(username)
@@ -326,7 +326,7 @@ def reset_password(request):
     if request.method == 'POST':
         password = request.POST.get('password')
         password_confirm = request.POST.get('password_confirm')
-        print password, password_confirm
+        print(password, password_confirm)
         if password != password_confirm:
             return HttpResponse('密码不匹配')
         else:
@@ -463,7 +463,7 @@ def down_key(request):
         if user:
             username = user.username
             private_key_file = os.path.join(KEY_DIR, 'user', username+'.pem')
-            print private_key_file
+            print(private_key_file)
             if os.path.isfile(private_key_file):
                 f = open(private_key_file)
                 data = f.read()

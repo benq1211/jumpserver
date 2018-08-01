@@ -5,7 +5,7 @@ import xlsxwriter
 from django.db.models import AutoField
 from jumpserver.api import *
 from jasset.models import ASSET_STATUS, ASSET_TYPE, ASSET_ENV, IDC, AssetRecord
-from jperm.ansible_api import MyRunner
+#from jperm.ansible_api import MyRunner
 from jperm.perm_api import gen_resource
 from jumpserver.templatetags.mytags import get_disk_info
 
@@ -127,10 +127,10 @@ def asset_diff(before, after):
 
 
 def asset_diff_one(before, after):
-    print before.__dict__, after.__dict__
+    print(before.__dict__, after.__dict__)
     fields = Asset._meta.get_all_field_names()
     for field in fields:
-        print before.field, after.field
+        print(before.field, after.field)
 
 
 def db_asset_alert(asset, username, alert_dic):
@@ -278,7 +278,7 @@ def excel_to_db(excel_file):
     """
     try:
         data = xlrd.open_workbook(filename=None, file_contents=excel_file.read())
-    except Exception, e:
+    except Exception as e:
         return False
     else:
         table = data.sheets()[0]
@@ -370,13 +370,13 @@ def asset_ansible_update(obj_list, name=''):
         try:
             setup_info = ansible_asset_info['contacted'][asset.hostname]['ansible_facts']
             logger.debug("setup_info: %s" % setup_info)
-        except KeyError, e:
+        except KeyError as e:
             logger.error("获取setup_info失败: %s" % e)
             continue
         else:
             try:
                 asset_info = get_ansible_asset_info(asset.ip, setup_info)
-                print asset_info
+                print(asset_info)
                 other_ip, mac, cpu, memory, disk, sn, system_type, system_version, brand, system_arch = asset_info
                 asset_dic = {"other_ip": other_ip,
                              "mac": mac,

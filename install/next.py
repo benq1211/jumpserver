@@ -46,10 +46,10 @@ class Setup(object):
 
     def _input_admin(self):
         while True:
-            print
-            admin_user = raw_input('请输入管理员用户名 [%s]: ' % self.admin_user).strip()
-            admin_pass = raw_input('请输入管理员密码: [%s]: ' % self.admin_pass).strip()
-            admin_pass_again = raw_input('请再次输入管理员密码: [%s]: ' % self.admin_pass).strip()
+            print()
+            admin_user = input('请输入管理员用户名 [%s]: ' % self.admin_user).strip()
+            admin_pass = input('请输入管理员密码: [%s]: ' % self.admin_pass).strip()
+            admin_pass_again = input('请再次输入管理员密码: [%s]: ' % self.admin_pass).strip()
 
             if admin_user:
                 self.admin_user = admin_user
@@ -83,13 +83,13 @@ class Setup(object):
     @staticmethod
     def _chmod_file():
         os.chdir(jms_dir)
-        os.chmod('init.sh', 0755)
-        os.chmod('connect.py', 0755)
-        os.chmod('manage.py', 0755)
-        os.chmod('run_server.py', 0755)
-        os.chmod('service.sh', 0755)
-        os.chmod('logs', 0777)
-        os.chmod('keys', 0777)
+        os.chmod('init.sh', 0o755)
+        os.chmod('connect.py', 0o755)
+        os.chmod('manage.py', 0o755)
+        os.chmod('run_server.py', 0o755)
+        os.chmod('service.sh', 0o755)
+        os.chmod('logs', 0o777)
+        os.chmod('keys', 0o777)
 
     @staticmethod
     def _run_service():
@@ -99,9 +99,9 @@ class Setup(object):
         color_print('安装成功，Web登录请访问http://ip:8000, 祝你使用愉快。\n请访问 https://github.com/jumpserver/jumpserver/wiki 查看文档', 'green')
 
     def start(self):
-        print "开始安装Jumpserver ..."
+        print("开始安装Jumpserver ...")
         self._pull()
-        self._sync_db()
+       # self._sync_db()
         self._input_admin()
         self._create_admin()
         self._chmod_file()

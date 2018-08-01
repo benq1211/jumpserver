@@ -5,6 +5,7 @@ import uuid
 import urllib
 
 from django.db.models import Count
+from django.shortcuts import render, render_to_response
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseNotFound
@@ -18,7 +19,7 @@ from django.contrib.auth.decorators import login_required
 from jlog.models import Log, FileLog
 from jperm.perm_api import get_group_user_perm, gen_resource
 from jasset.models import Asset, IDC
-from jperm.ansible_api import MyRunner
+#from jperm.ansible_api import MyRunner
 import zipfile
 
 
@@ -147,11 +148,14 @@ def index(request):
         login_10 = Log.objects.order_by('-start_time')[:10]
         login_more_10 = Log.objects.order_by('-start_time')[10:21]
 
-    return render_to_response('index.html', locals(), context_instance=RequestContext(request))
+
+    return render(request,'index.html', locals())
+
 
 
 def skin_config(request):
-    return render_to_response('skin_config.html')
+    #return render_to_response('skin_config.html')
+    return render(request, 'skin_config.html', )
 
 
 def is_latest():
@@ -242,7 +246,7 @@ def setting(request):
                     if private_key:
                         with open(private_key_path, 'w') as f:
                                 f.write(private_key)
-                        os.chmod(private_key_path, 0600)
+                     #   os.chmod(private_key_path, 0600)
 
                     if setting_default:
                         if password:
@@ -347,7 +351,8 @@ def download(request):
         response['Content-Disposition'] = 'attachment; filename=%s.zip' % tmp_dir_name
         return response
 
-    return render_to_response('download.html', locals(), context_instance=RequestContext(request))
+    #return render_to_response('download.html', locals(), context_instance=RequestContext(request))
+    return render(request,'download.html',locals())
 
 
 @login_required(login_url='/login')

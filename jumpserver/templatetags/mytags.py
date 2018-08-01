@@ -200,7 +200,7 @@ def str_to_list(info):
     """
     str to list
     """
-    print ast.literal_eval(info), type(ast.literal_eval(info))
+    print(ast.literal_eval(info), type(ast.literal_eval(info)))
     return ast.literal_eval(info)
 
 

@@ -13,7 +13,7 @@ import uuid
 import json
 import logging
 
-from settings import *
+from jumpserver.settings import *
 from django.core.paginator import Paginator, EmptyPage, InvalidPage
 from django.http import HttpResponse, Http404
 from django.template import RequestContext
@@ -23,7 +23,7 @@ from jasset.models import Asset, AssetGroup
 from jperm.models import PermRule, PermRole
 from jumpserver.models import Setting
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 
@@ -36,7 +36,7 @@ def set_log(level, filename='jumpserver.log'):
     log_file = os.path.join(LOG_DIR, filename)
     if not os.path.isfile(log_file):
         os.mknod(log_file)
-        os.chmod(log_file, 0777)
+        #os.chmod(log_file, 0777)
     log_level_total = {'debug': logging.DEBUG, 'info': logging.INFO, 'warning': logging.WARN, 'error': logging.ERROR,
                        'critical': logging.CRITICAL}
     logger_f = logging.getLogger('jumpserver')
@@ -98,7 +98,7 @@ def get_role_key(user, role):
                 fu.write(fk.read())
         logger.debug(u"创建新的系统用户key %s, Owner: %s" % (user_role_key_path, user.username))
         chown(user_role_key_path, user.username)
-        os.chmod(user_role_key_path, 0600)
+#        os.chmod(user_role_key_path, 0600)
     return user_role_key_path
 
 
@@ -443,7 +443,7 @@ def verify(request, user_group=None, user=None, asset_group=None, asset=None, ed
         asset_ids = []
         for a in dept_assets:
             asset_ids.append(str(a.id))
-        print asset, asset_ids
+        print(asset, asset_ids)
         if not set(asset).issubset(set(asset_ids)):
             return False
 
@@ -479,7 +479,8 @@ def http_error(request, emg):
 
 
 def my_render(template, data, request):
-    return render_to_response(template, data, context_instance=RequestContext(request))
+    #return render_to_response(template, data, context_instance=RequestContext(request))
+    return render(request,template,locals())
 
 
 def get_tmp_dir():

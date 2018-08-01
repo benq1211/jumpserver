@@ -1,8 +1,8 @@
 # coding:utf-8
-from django.conf.urls import patterns, include, url
+from django.conf.urls import  include, url
 from jlog.views import *
 
-urlpatterns = patterns('',
+urlpatterns = (
                        url(r'^list/(\w+)/$', log_list, name='log_list'),
                        url(r'^detail/(\w+)/$', log_detail, name='log_detail'),
                        url(r'^history/$', log_history, name='log_history'),

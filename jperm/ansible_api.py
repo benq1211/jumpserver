@@ -511,7 +511,7 @@ if __name__ == "__main__":
                  # "ansible_become_pass": "yusky0902",
                  }]
     cmd.run('ls',pattern='*')
-    print cmd.results_raw
+    print(cmd.results_raw)
 
     # resource = [{"hostname": "192.168.10.148", "port": "22", "username": "root", "password": "xxx"}]
     # task = Tasks(resource)

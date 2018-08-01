@@ -314,5 +314,5 @@ def get_role_push_host(role):
 
 
 if __name__ == "__main__":
-    print get_role_info(1)
+    print(get_role_info(1))
 

@@ -7,6 +7,7 @@ from jumpserver.models import Setting
 from jasset.forms import AssetForm, IdcForm
 from jasset.models import Asset, IDC, AssetGroup, ASSET_TYPE, ASSET_STATUS
 from jperm.perm_api import get_group_asset_perm, get_group_user_perm
+from django.shortcuts import render
 
 
 @require_role('admin')
@@ -120,7 +121,7 @@ def group_del(request):
     return HttpResponse(u'删除成功')
 
 
-@require_role('admin')
+#@require_role('admin')
 def asset_add(request):
     """
     Asset add view
@@ -139,7 +140,7 @@ def asset_add(request):
         is_active = True if request.POST.get('is_active') == '1' else False
         use_default_auth = request.POST.get('use_default_auth', '')
         try:
-            if Asset.objects.filter(hostname=unicode(hostname)):
+            if Asset.objects.filter(hostname=hostname):
                 error = u'该主机名 %s 已存在!' % hostname
                 raise ServerError(error)
             if len(hostname) > 54:
@@ -164,7 +165,8 @@ def asset_add(request):
             else:
                 esg = u'主机 %s 添加失败' % hostname
 
-    return my_render('jasset/asset_add.html', locals(), request)
+    #return my_render('jasset/asset_add.html', locals(), request)
+    return render(request,'jasset/asset_add.html',locals())
 
 
 @require_role('admin')
@@ -449,7 +451,7 @@ def asset_detail(request):
                     user_perm.append([user, role_dic.get('role', '')])
             elif perm == 'user_group' or perm == 'rule':
                 user_group_perm = value
-    print perm_info
+    print(perm_info)
 
     asset_record = AssetRecord.objects.filter(asset=asset).order_by('-alert_time')
 
@@ -491,7 +493,7 @@ def asset_update_batch(request):
     return HttpResponse(u'批量更新成功!')
 
 
-@require_role('admin')
+#@require_role('admin')
 def idc_add(request):
     """
     IDC add view
@@ -511,7 +513,10 @@ def idc_add(request):
             return HttpResponseRedirect(reverse('idc_list'))
     else:
         idc_form = IdcForm()
-    return my_render('jasset/idc_add.html', locals(), request)
+
+    #return my_render('jasset/idc_add.html', locals(), request)
+
+    return render(request,'jasset/idc_add.html',{'idc_form':idc_form})
 
 
 @require_role('admin')
