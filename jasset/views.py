@@ -133,11 +133,13 @@ def asset_add(request):
     default_setting = get_object(Setting, name='default')
     default_port = default_setting.field2 if default_setting else ''
     if request.method == 'POST':
-        af_post = AssetForm(request.POST)
+       # af_post = AssetForm(request.POST)
         ip = request.POST.get('ip', '')
         hostname = request.POST.get('hostname', '')
+        groups = request.POST.get('group','')
+        port = request.POST.get('port','')
 
-        is_active = True if request.POST.get('is_active') == '1' else False
+
         use_default_auth = request.POST.get('use_default_auth', '')
         try:
             if Asset.objects.filter(hostname=hostname):
@@ -149,21 +151,13 @@ def asset_add(request):
         except ServerError:
             pass
         else:
-            if af_post.is_valid():
-                asset_save = af_post.save(commit=False)
-                if not use_default_auth:
-                    password = request.POST.get('password', '')
-                    password_encode = CRYPTOR.encrypt(password)
-                    asset_save.password = password_encode
-                if not ip:
-                    asset_save.ip = hostname
-                asset_save.is_active = True if is_active else False
-                asset_save.save()
-                af_post.save_m2m()
 
-                msg = u'主机 %s 添加成功' % hostname
-            else:
-                esg = u'主机 %s 添加失败' % hostname
+                asset=Asset(hostname=hostname,ip=ip,port=port,use_default_auth=True)
+                asset.save()
+                asset.group.add(groups)
+
+                msg = u'主机  添加成功'
+
 
     #return my_render('jasset/asset_add.html', locals(), request)
     return render(request,'jasset/asset_add.html',locals())
@@ -347,9 +341,11 @@ def asset_list(request):
         return my_render('jasset/asset_excel_download.html', locals(), request)
     assets_list, p, assets, page_range, current_page, show_first, show_end = pages(asset_find, request)
     if user_perm != 0:
-        return my_render('jasset/asset_list.html', locals(), request)
+       # return my_render('jasset/asset_list.html', locals(), request)
+        return render(request,'jasset/asset_list.html',locals())
     else:
-        return my_render('jasset/asset_cu_list.html', locals(), request)
+        #return my_render('jasset/asset_cu_list.html', locals(), request)
+        return render(request, 'jasset/asset_cu_list.html', locals())
 
 
 @require_role('admin')

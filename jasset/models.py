@@ -34,7 +34,7 @@ class AssetGroup(models.Model):
     name = models.CharField(max_length=80, unique=True)
     comment = models.CharField(max_length=160, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -49,7 +49,7 @@ class IDC(models.Model):
     operator = models.CharField(max_length=32, blank=True, default='', null=True, verbose_name=u"运营商")
     comment = models.CharField(max_length=128, blank=True, default='', null=True, verbose_name=u"备注")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -90,7 +90,7 @@ class Asset(models.Model):
     is_active = models.BooleanField(default=True, verbose_name=u"是否激活")
     comment = models.CharField(max_length=128, blank=True, null=True, verbose_name=u"备注")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.ip
 
 
@@ -107,5 +107,5 @@ class AssetAlias(models.Model):
     asset = models.ForeignKey(Asset)
     alias = models.CharField(max_length=100, blank=True, null=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.alias
