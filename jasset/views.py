@@ -41,7 +41,7 @@ def group_add(request):
             db_add_group(name=name, comment=comment, asset_select=asset_select)
             smg = u"主机组 %s 添加成功" % name
 
-    return my_render('jasset/group_add.html', locals(), request)
+    return render(request,'jasset/group_add.html',locals())
 
 
 @require_role('admin')
@@ -103,7 +103,8 @@ def group_list(request):
         asset_group_list = asset_group_list.filter(Q(name__contains=keyword) | Q(comment__contains=keyword))
 
     asset_group_list, p, asset_groups, page_range, current_page, show_first, show_end = pages(asset_group_list, request)
-    return my_render('jasset/group_list.html', locals(), request)
+
+    return render(request,'jasset/group_list.html',locals())
 
 
 @require_role('admin')

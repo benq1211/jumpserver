@@ -4,13 +4,14 @@
 
 # import random
 # from Crypto.PublicKey import RSA
-import uuid
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from juser.user_api import *
 from jperm.perm_api import get_group_user_perm
 import re
+import uuid
 
 MAIL_FROM = EMAIL_HOST_USER
 
@@ -47,7 +48,8 @@ def group_add(request):
         else:
             msg = u'添加组 %s 成功' % group_name
 
-    return my_render('juser/group_add.html', locals(), request)
+    #return my_render('juser/group_add.html', locals(), request)
+    return  render(request,'juser/group_add.html',locals())
 
 
 @require_role(role='super')
@@ -68,7 +70,8 @@ def group_list(request):
         user_group_list = user_group_list.filter(id=int(group_id))
 
     user_group_list, p, user_groups, page_range, current_page, show_first, show_end = pages(user_group_list, request)
-    return my_render('juser/group_list.html', locals(), request)
+   #return my_render('juser/group_list.html', locals(), request)
+    return render(request,'juser/group_list.html',locals())
 
 
 @require_role(role='super')
@@ -131,7 +134,8 @@ def group_edit(request):
             users_selected = User.objects.filter(group=user_group)
             users_remain = User.objects.filter(~Q(group=user_group))
 
-    return my_render('juser/group_edit.html', locals(), request)
+    #return my_render('juser/group_edit.html', locals(), request)
+    return render(request,'juser/group_edit.html',locals())
 
 
 @require_role(role='super')
@@ -202,7 +206,8 @@ def user_add(request):
                 if MAIL_ENABLE and send_mail_need:
                     user_add_mail(user, kwargs=locals())
                 msg = get_display_msg(user, password=password, ssh_key_pwd=ssh_key_pwd, send_mail_need=send_mail_need)
-    return my_render('juser/user_add.html', locals(), request)
+    #return my_render('juser/user_add.html', locals(), request)
+    return render(request,'juser/user_add.html',locals())
 
 
 @require_role(role='super')
@@ -224,7 +229,8 @@ def user_list(request):
 
     users_list, p, users, page_range, current_page, show_first, show_end = pages(users_list, request)
 
-    return my_render('juser/user_list.html', locals(), request)
+    #return my_render('juser/user_list.html', locals(), request)
+    return render(request,'juser/user_list.html',locals())
 
 
 @require_role(role='user')
@@ -245,7 +251,8 @@ def user_detail(request):
     user_log_last = Log.objects.filter(user=user.username).order_by('id')[0:50]
     user_log_last_num = len(user_log_last)
 
-    return my_render('juser/user_detail.html', locals(), request)
+    #return my_render('juser/user_detail.html', locals(), request)
+    return render(request,'juser/user_detail.html',locals())
 
 
 @require_role(role='admin')
@@ -399,7 +406,8 @@ def user_edit(request):
             send_mail('您的信息已修改', msg, MAIL_FROM, [email], fail_silently=False)
 
         return HttpResponseRedirect(reverse('user_list'))
-    return my_render('juser/user_edit.html', locals(), request)
+    #return my_render('juser/user_edit.html', locals(), request)
+    return  render(request,'juser/user_edit.html',locals())
 
 
 @require_role('user')
@@ -408,7 +416,8 @@ def profile(request):
     if not user_id:
         return HttpResponseRedirect(reverse('index'))
     user = User.objects.get(id=user_id)
-    return my_render('juser/profile.html', locals(), request)
+    #return my_render('juser/profile.html', locals(), request)
+    return render(request,'juser/profile.html',locals())
 
 
 def change_info(request):
@@ -436,8 +445,8 @@ def change_info(request):
                 user.save()
             msg = '修改成功'
 
-    return my_render('juser/change_info.html', locals(), request)
-
+    #return my_render('juser/change_info.html', locals(), request)
+    return render(request,'juser/change_info.html',locals())
 
 @require_role(role='user')
 def regen_ssh_key(request):
