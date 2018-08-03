@@ -84,7 +84,7 @@ def group_edit(request):
 
         return HttpResponseRedirect(reverse('asset_group_list'))
 
-    return my_render('jasset/group_edit.html', locals(), request)
+    return render(request,'jasset/group_edit.html',locals())
 
 
 @require_role('admin')
@@ -207,8 +207,9 @@ def asset_edit(request):
         password_old = asset.password
     # asset_old = copy_model_instance(asset)
     af = AssetForm(instance=asset)
+    #af = AssetForm(initial=asset)
     if request.method == 'POST':
-        af_post = AssetForm(request.POST, instance=asset)
+        #af_post = AssetForm(request.POST, instance=asset)
         ip = request.POST.get('ip', '')
         hostname = request.POST.get('hostname', '')
         password = request.POST.get('password', '')
@@ -216,7 +217,7 @@ def asset_edit(request):
         use_default_auth = request.POST.get('use_default_auth', '')
         try:
             asset_test = get_object(Asset, hostname=hostname)
-            if asset_test and asset_id != unicode(asset_test.id):
+            if asset_test and asset_id != asset_test.id:
                 emg = u'该主机名 %s 已存在!' % hostname
                 raise ServerError(emg)
             if len(hostname) > 54:
@@ -249,10 +250,11 @@ def asset_edit(request):
                     raise ServerError(emg)
         except ServerError as e:
             error = e.message
-            return my_render('jasset/asset_edit.html', locals(), request)
+            return render(request,'jasset/asset_edit.html',locals())
         return HttpResponseRedirect(reverse('asset_detail')+'?id=%s' % asset_id)
 
-    return my_render('jasset/asset_edit.html', locals(), request)
+
+    return render(request,'jasset/asset_edit.html',locals())
 
 
 @require_role('user')
@@ -425,9 +427,9 @@ def asset_edit_batch(request):
             if alert_list:
                 recode_name = unicode(name) + ' - ' + u'批量'
                 AssetRecord.objects.create(asset=asset, username=recode_name, content=alert_list)
-        return my_render('jasset/asset_update_status.html', locals(), request)
+        return render(request,'jasset/asset_update_status.html',locals())
 
-    return my_render('jasset/asset_edit_batch.html', locals(), request)
+    return render(request,'jasset/asset_edit_batch.html',locals())
 
 
 @require_role('admin')
@@ -452,7 +454,7 @@ def asset_detail(request):
 
     asset_record = AssetRecord.objects.filter(asset=asset).order_by('-alert_time')
 
-    return my_render('jasset/asset_detail.html', locals(), request)
+    return render(request,'jasset/asset_detail.html',locals())
 
 
 @require_role('admin')
@@ -529,7 +531,7 @@ def idc_list(request):
     else:
         posts = IDC.objects.exclude(name='ALL').order_by('id')
     contact_list, p, contacts, page_range, current_page, show_first, show_end = pages(posts, request)
-    return my_render('jasset/idc_list.html', locals(), request)
+    return render(request,'jasset/idc_list.html',locals())
 
 
 @require_role('admin')
@@ -547,7 +549,7 @@ def idc_edit(request):
             return HttpResponseRedirect(reverse('idc_list'))
     else:
         idc_form = IdcForm(instance=idc)
-        return my_render('jasset/idc_edit.html', locals(), request)
+        return render(request,'jasset/idc_edit.html',locals())
 
 
 @require_role('admin')
@@ -576,4 +578,4 @@ def asset_upload(request):
             smg = u'批量添加成功'
         else:
             emg = u'批量添加失败,请检查格式.'
-    return my_render('jasset/asset_add_batch.html', locals(), request)
+    return render(request,'jasset/asset_add_batch.html',locals())
